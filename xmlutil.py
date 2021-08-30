@@ -15,3 +15,10 @@ def strip_ns_prefix(node):
         }
         element.attrib.clear()
         element.attrib.update(stripped_attr)
+
+def find_first(node, xpath_str):
+    results = node.xpath(xpath_str)
+    if len(results) == 0:
+        return None
+    else:
+        return results[0]
