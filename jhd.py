@@ -2,6 +2,7 @@
 
 
 def main(file, encoding):
+    setup_stdout_encoding()
 
     data = open(file, "rb").read()
 
@@ -25,6 +26,15 @@ def main(file, encoding):
         pre = "_" * skip
 
 
+import io, sys
+
+
+def setup_stdout_encoding():
+    # 標準出力が端末でない場合、エンコーディングを utf-8 にする
+    if not sys.stdout.isatty():
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
+
 def hex_dump(block):
     text = " ".join("%02x" % c for c in block)
     # 16 バイトに満たない場合は空白を追加
@@ -37,7 +47,7 @@ def hex_dump(block):
 def bin_to_ascii(block, row_len, encoding):
     def isctrl(c):
         # 制御文字
-        return c < 0x20 or c == 0x7f
+        return c < 0x20 or c == 0x7F
 
     src = bytearray((0x2E if isctrl(b) else b for b in block))
     size = row_len
