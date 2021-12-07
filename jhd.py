@@ -86,7 +86,9 @@ import os.path
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="jhd - Japanese Hexadecimal Dump")
+    parser = argparse.ArgumentParser(
+        description="jhd - Hexadecimal Dump with decoded Japanese string"
+    )
     parser.set_defaults(encoding="utf-8")
     parser.add_argument(
         "-s",
@@ -94,7 +96,7 @@ def parse_arguments():
         dest="encoding",
         action="store_const",
         const="shift_jis",
-        help="assume file encoding is Shift_JIS",
+        help="assume FILE's encoding is Shift_JIS",
     )
     parser.add_argument(
         "-u",
@@ -102,7 +104,7 @@ def parse_arguments():
         dest="encoding",
         action="store_const",
         const="utf-8",
-        help="assume file encoding is UTF-8 (default)",
+        help="assume FILE's encoding is UTF-8 (default)",
     )
     parser.add_argument("file", metavar="FILE", help="file to dump")
     args = parser.parse_args()
