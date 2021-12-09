@@ -14,7 +14,7 @@ def main(args):
             total_byte += byte
             count += 1
     if count > 1:
-        print(fmt.format(total_line, total_byte, f"total({count} files)"))
+        print(fmt.format(total_line, total_byte, f"total({count}files)"))
 
 def wc(file):
     size = os.stat(file).st_size
