@@ -26,5 +26,9 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("usage: python -m wc file [file..]")
         exit()
-    main(sys.argv[1:])
+    try:
+        main(sys.argv[1:])
+    except BrokenPipeError:
+        pass
+
 

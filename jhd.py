@@ -119,4 +119,8 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    main(args.file, args.encoding)
+    try:
+        main(args.file, args.encoding)
+    except BrokenPipeError:
+        pass
+
