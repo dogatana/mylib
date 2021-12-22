@@ -2,6 +2,7 @@ import glob
 import os.path
 import re
 
+
 def main(args):
     pattern = re.compile(args.pattern)
     files = collect_files(args.file)
@@ -13,16 +14,18 @@ def main(args):
             continue
         grep(file, pattern, args)
 
+
 def collect_files(file_args):
     files = []
     for arg in file_args:
         files.extend(glob.glob(arg))
     return files
 
+
 def grep(file, pattern, option):
     count = 0
     for n, raw_line in enumerate(open(file, encoding=option.encoding), start=1):
-        line = raw_line[:len(raw_line) - 1] # remove \n at the end
+        line = raw_line[: len(raw_line) - 1]  # remove \n at the end
         m = pattern.search(line)
         if m is None:
             continue
@@ -44,10 +47,9 @@ from encodings.aliases import aliases
 
 ENCODINGS = list(aliases.keys()) + list(aliases.values())
 
+
 def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="grep - full regexp grep"
-    )
+    parser = argparse.ArgumentParser(description="grep - full regexp grep")
     parser.add_argument(
         "-c",
         "--count",
@@ -67,19 +69,16 @@ def parse_arguments():
         "--encoding",
         metavar="ENCODING",
         default="utf-8",
-        help="file encoding, default=utf-8"
+        help="file encoding, default is utf-8",
     )
     parser.add_argument("pattern", help="regexp pattern")
-    parser.add_argument(
-        "file",
-        nargs="+",
-        help = "file(s) to do grep"
-    )
+    parser.add_argument("file", nargs="+", help="file(s) to do grep")
     args = parser.parse_args()
     if encodings.normalize_encoding(args.encoding) not in ENCODINGS:
         print(args.encoding, "invalid encoding")
         exit()
     return args
+
 
 if __name__ == "__main__":
     args = parse_arguments()
