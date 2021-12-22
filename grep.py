@@ -49,7 +49,7 @@ ENCODINGS = list(aliases.keys()) + list(aliases.values())
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="grep - full regexp grep")
+    parser = argparse.ArgumentParser(description="grep - python regexp grep")
     parser.add_argument(
         "-c",
         "--count",
@@ -72,7 +72,7 @@ def parse_arguments():
         help="file encoding, default is utf-8",
     )
     parser.add_argument("pattern", help="regexp pattern")
-    parser.add_argument("file", nargs="+", help="file(s) to do grep")
+    parser.add_argument("file", nargs="+", help="file to be grep-ed")
     args = parser.parse_args()
     if encodings.normalize_encoding(args.encoding) not in ENCODINGS:
         print(args.encoding, "invalid encoding")
