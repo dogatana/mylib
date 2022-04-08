@@ -22,3 +22,16 @@ def find_first(node, xpath_str):
         return None
     else:
         return results[0]
+
+def read_xml(filename: str):
+    """xml ファイルの読み込み"""
+    with open(filename, "rb") as fp:
+        text = fp.read()
+
+    return etree.fromstring(text)
+
+def read_xml_wo_namespace(filename: str):
+    """xml ファイルを読み込み、namespace を削除して返す"""
+    xml = read_xml(filename)
+    strip_ns_prefix(xml)
+    return xml
