@@ -32,10 +32,15 @@ setattr(CCStats, "to_a", to_a)
 
 
 def main(paths):
-    stats = anayalize(paths)
+    stats = anayalize(globbed(paths))
     if stats:
         print_result(stats)
 
+def globbed(paths):
+    result = []
+    for path in paths:
+        result.extend(glob.glob(path))
+    return result
 
 def anayalize(paths):
     stats = []
