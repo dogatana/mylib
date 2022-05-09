@@ -39,6 +39,8 @@ def get_records(log_group, start_dt, end_dt, limit, interval, query):
             {item["field"]: item["value"] for item in result if item["field"] != "@ptr"}
         )
 
+    if len(records) == limit:
+        print(f"# reach limit {limit}, may not include all records")
     return records
 
 
