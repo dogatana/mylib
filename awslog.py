@@ -8,8 +8,11 @@ LIMIT_MAX = 10000
 def get_records(log_group, start_dt, end_dt, limit, interval, query):
     """ログの検索"""
 
+    if start_dt > end_dt:
+        raise ValueError(f"# star {start_dt} is newer thant end {end_dt}")
+
     if limit < 1 or limit > LIMIT_MAX:
-        raise ValueError("# invalid limit", limit)
+        raise ValueError(f"# invalid limit {limit}")
 
     client = boto3.client("logs")
 
