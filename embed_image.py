@@ -12,7 +12,6 @@ def main(in_html, out_html):
             continue
         new_src = replace_src(in_html, src)
         img.attrib["src"] = new_src
-    breakpoint()
     doc.write(out_html, encoding="utf-8", method="html")
 
 def replace_src(file, src):
