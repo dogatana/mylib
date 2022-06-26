@@ -12,7 +12,15 @@ import boto3
 # API では最大 10,000 件まで取得可能
 LIMIT_MAX = 10_000
 
-def get_records(log_group: str, start_dt: datetime, end_dt:datetime, limit: int, interval: int, query: str) -> List:
+
+def get_records(
+    log_group: str,
+    start_dt: datetime,
+    end_dt: datetime,
+    limit: int,
+    interval: int,
+    query: str,
+) -> List:
     """ログの検索"""
 
     if start_dt >= end_dt:
@@ -55,5 +63,5 @@ def get_records(log_group: str, start_dt: datetime, end_dt:datetime, limit: int,
 
 
 def aws_timestamp(dt: datetime) -> int:
-    """ local datetime から AWS のタイムスタンプを取得"""
+    """local datetime から AWS のタイムスタンプを取得"""
     return int(dt.astimezone(timezone.utc).timestamp())
