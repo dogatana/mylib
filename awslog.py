@@ -1,22 +1,29 @@
+""""
+AWS CloudWatchLogs の取得ヘルパ
+
+参考： https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html
+"""
 import time
-from datetime import timezone
+from datetime import datetime, timezone
+from typing import List
 
 import boto3
 
-LIMIT_MAX = 10000
+# API では最大 10,000 件まで取得可能
+LIMIT_MAX = 10_000
 
-def get_records(log_group, start_dt, end_dt, limit, interval, query):
+def get_records(log_group: str, start_dt: datetime, end_dt:datetime, limit: int, interval: int, query: str) -> List:
     """ログの検索"""
 
-    if start_dt > end_dt:
-        raise ValueError(f"# star {start_dt} is newer thant end {end_dt}")
+    if start_dt >= end_dt:
+        raise ValueError(f"# star:{start_dt} >= end:{end_dt}")
 
     if limit < 1 or limit > LIMIT_MAX:
         raise ValueError(f"# invalid limit {limit}")
 
     client = boto3.client("logs")
 
-    print("# query", query, sep="\n")
+    print("# query string", query, sep="\n")
 
     res = client.start_query(
         logGroupName=log_group,
@@ -43,10 +50,10 @@ def get_records(log_group, start_dt, end_dt, limit, interval, query):
         )
 
     if len(records) == limit:
-        print(f"# reach limit {limit}, may not include all records")
+        print(f"# reach limit {limit}, the result may not include all records")
     return records
 
 
-def aws_timestamp(dt):
-    """datetime から AWS のタイムスタンプを取得"""
-    return int(dt.astimezone(timezone.utc).timestamp()) * 1000
+def aws_timestamp(dt: datetime) -> int:
+    """ local datetime から AWS のタイムスタンプを取得"""
+    return int(dt.astimezone(timezone.utc).timestamp())
