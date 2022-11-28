@@ -1,9 +1,9 @@
-import sys
-import os.path
 import base64
-import re
+import os.path
+import sys
 
 import lxml.html
+
 
 def main(in_html, out_html):
     doc = lxml.html.parse(in_html)
@@ -20,6 +20,7 @@ def main(in_html, out_html):
         continue
     doc.write(out_html, encoding="utf-8", method="html")
 
+
 def define_type(src):
     ext = os.path.splitext(src)[1].lower()
     if ext == ".png":
@@ -31,7 +32,8 @@ def define_type(src):
     elif ext == ".svg":
         return "svg"
     else:
-        raise ValueError("unknown type: "+ src)
+        raise ValueError("unknown type: " + src)
+
 
 def insert_svg(img, file):
     svg = read_svg_as_element(file)
@@ -44,12 +46,14 @@ def insert_svg(img, file):
 
     img.tag = "svg"
 
+
 def read_svg_as_element(file):
     with open(file, "rb") as fp:
         text = fp.read()
     breakpoint()
     doc = lxml.html.fromstring(text)
     return doc.xpath("//svg")[0]
+
 
 def replace_src(file, src):
     dir = os.path.dirname(file)
@@ -66,6 +70,7 @@ def replace_src(file, src):
 def encode(img_file):
     img = open(img_file, "rb").read()
     return base64.b64encode(img).decode("ascii")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

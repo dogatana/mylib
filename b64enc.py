@@ -1,6 +1,7 @@
 import base64
-import sys
 import os.path
+import sys
+
 
 def main(in_file, out_file):
     if not os.path.exists(in_file):
@@ -16,9 +17,11 @@ def main(in_file, out_file):
     else:
         open(out_file, "wb").write(btext)
 
+
 def usage():
     print("usage: python -m b64enc in_file [out_file]")
     exit()
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:

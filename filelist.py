@@ -1,8 +1,8 @@
 """ 指定フォルダのファイル一覧 Excel ファイルを作成 """
-import sys
 import os
 import os.path
-from collections import namedtuple
+import sys
+
 import excel
 
 

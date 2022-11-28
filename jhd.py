@@ -1,4 +1,8 @@
 """ jhd - Japanese Hexadecimal Dump """
+import argparse
+import io
+import os.path
+import sys
 
 
 def main(file, encoding):
@@ -9,24 +13,21 @@ def main(file, encoding):
     start = 0
     pre = ""
     skip = 0
-    for ofs in range(start, len(data), 16):
+    for ofs in range(start, len(data), 16):  # noqa: E203
         if ofs >= len(data):
             break
 
-        hex_text = hex_dump(data[ofs : ofs + 16])
+        hex_text = hex_dump(data[ofs : ofs + 16])  # noqa: E203
         print(f"{ofs:08x}: {hex_text}  |", end="")
 
         # utf-8 の 4バイト分を追加して文字列化
-        block = data[ofs + skip : (ofs + 20)]
+        block = data[ofs + skip : (ofs + 20)]  # noqa: E203
         ascii_text, skip = bin_to_ascii(block, 16 - skip, encoding)
         if ascii_text.startswith("# error"):
             print("\n", ascii_text)
             exit()
         print(pre + ascii_text)
         pre = "_" * skip
-
-
-import io, sys
 
 
 def setup_stdout_encoding():
@@ -81,10 +82,6 @@ def bin_to_ascii(block, row_len, encoding):
             return f"# error {e}", added
 
 
-import argparse
-import os.path
-
-
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="jhd - Hexadecimal Dump with decoded Japanese string"
@@ -123,4 +120,3 @@ if __name__ == "__main__":
         main(args.file, args.encoding)
     except BrokenPipeError:
         pass
-

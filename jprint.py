@@ -1,10 +1,11 @@
 """
 prity print for json
 """
-import json
-import yaml
-import os.path
 import argparse
+import json
+import os.path
+
+import yaml
 
 
 def main(args):
@@ -30,7 +31,6 @@ def load_json(file):
         return None
 
 
-
 def load_yaml(file):
     try:
         with open(file, "rb") as fp:
@@ -47,7 +47,9 @@ def parse_arguments():
     )
     parser.add_argument("-y", "--yaml", help="force yaml", action="store_true")
     parser.add_argument("-j", "--json", help="force json", action="store_true")
-    parser.add_argument("-i", "--indent", help="indent leve, default is 4", type=int, default=4)
+    parser.add_argument(
+        "-i", "--indent", help="indent leve, default is 4", type=int, default=4
+    )
     parser.add_argument("file", help="file to print")
     return parser.parse_args()
 

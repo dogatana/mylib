@@ -1,6 +1,7 @@
 import base64
-import sys
 import os.path
+import sys
+
 
 def main(in_file, out_file):
     if not os.path.exists(in_file):
@@ -13,9 +14,11 @@ def main(in_file, out_file):
     text = open(in_file, "rb").read()
     open(out_file, "wb").write(base64.b64decode(text))
 
+
 def usage():
     print("usage: python -m b64dec in_file out_file")
     exit()
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:

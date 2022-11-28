@@ -1,6 +1,6 @@
-import sys
 import os
 import os.path
+import sys
 
 
 def main(dir):

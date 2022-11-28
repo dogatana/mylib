@@ -1,9 +1,10 @@
-from PIL import Image
-from PIL import ExifTags
 import glob
-import os.path
 import os
+import os.path
 import sys
+
+from PIL import ExifTags, Image
+
 
 def main(dir):
     files = glob.glob(os.path.join(dir, "*.jpg"))
@@ -16,7 +17,6 @@ def main(dir):
         date = hash["DateTime"].replace(":", "").replace(" ", "_")
         rename_file(file, date)
 
-        
 
 def get_exifdate(file):
     img = Image.open(file)
@@ -29,11 +29,13 @@ def get_exifdate(file):
     img.close()
     return hash
 
+
 def rename_file(file, date):
     dir = os.path.dirname(file)
     new_name = os.path.join(dir, f"{date}.JPG")
     print(f"reanem {file} to { new_name}")
     os.rename(file, new_name)
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:

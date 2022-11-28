@@ -1,6 +1,9 @@
+import argparse
+import encodings
 import glob
 import os.path
 import re
+from encodings.aliases import aliases
 
 
 def main(args):
@@ -40,10 +43,6 @@ def grep(file, pattern, option):
     if option.count:
         print(f"{file}:{count}")
 
-
-import argparse
-import encodings
-from encodings.aliases import aliases
 
 ENCODINGS = list(aliases.keys()) + list(aliases.values())
 

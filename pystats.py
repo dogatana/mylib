@@ -8,15 +8,15 @@
 * フォルダ指定時は、フォルダ直下の *.py を対象とする
 """
 
-import os.path
 import glob
-from collections import namedtuple
-import sys
+import os.path
 import re
+import sys
+from collections import namedtuple
 
 import radon.visitors
-from radon.complexity import cc_visit, cc_rank
-from radon.metrics import mi_visit, mi_rank
+from radon.complexity import cc_rank, cc_visit
+from radon.metrics import mi_rank, mi_visit
 
 from csvutil import to_csvline
 
@@ -36,11 +36,13 @@ def main(paths):
     if stats:
         print_result(stats)
 
+
 def globbed(paths):
     result = []
     for path in paths:
         result.extend(glob.glob(path))
     return result
+
 
 def anayalize(paths):
     stats = []
@@ -86,7 +88,7 @@ def get_metrics(file):
                 )
             )
         else:
-            raise NotImplemented(repr(cc))
+            raise NotImplementedError(repr(cc))
 
     mi = mi_visit(text, False)
 

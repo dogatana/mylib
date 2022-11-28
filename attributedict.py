@@ -28,7 +28,7 @@ class AttributeDict(object):
         return self.obj.items()
 
     def __setstate__(self, items):
-        if not hasattr(self, 'obj'):
+        if not hasattr(self, "obj"):
             self.obj = {}
         for key, val in items:
             self.obj[key] = val
@@ -60,5 +60,5 @@ class AttributeDict(object):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
 
+    doctest.testmod()
