@@ -4,10 +4,9 @@ from argparse import ArgumentParser
 from glob import glob
 
 JAVA11 = r"c:\pleiades\java\11\bin\java.exe"
-JAR = glob(os.path.join(os.path.dirname(__file__), "closure-compiler*.jar"))[-1]
-
 
 def minify(js_files, out_file, verbose):
+    args = init_env()
     args = [JAVA11, "-jar", JAR]
     if verbose:
         args.extend(["-W", "VERBOSE"])
@@ -18,6 +17,17 @@ def minify(js_files, out_file, verbose):
     for text in [output.stdout.decode("utf-8"), output.stderr.decode("utf-8")]:
         if text:
             print(text)
+
+
+def init_env():
+    if not os.path.exists(JAVA11):
+        print("error:", JAVA11, "not found")
+        exit()
+    jars = glob(os.path.join(os.path.dirname(__file__), "closure-compiler*.jar"))
+    if not jars:
+        print("error: closure-compiler*.jar not found")
+        exit()
+    return [JAVA11, jars[-1]]
 
 
 def parse_args():
