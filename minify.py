@@ -7,14 +7,13 @@ JAVA11 = r"c:\pleiades\java\11\bin\java.exe"
 
 def minify(js_files, out_file, verbose):
     args = init_env()
-    args = [JAVA11, "-jar", JAR]
     if verbose:
         args.extend(["-W", "VERBOSE"])
     args.extend(js_files)
     args.extend(["--js_output_file", out_file])
 
     output = subprocess.run(args, capture_output=True)
-    for text in [output.stdout.decode("utf-8"), output.stderr.decode("utf-8")]:
+    for text in [output.stdout.decode("cp932"), output.stderr.decode("cp932")]:
         if text:
             print(text)
 
@@ -27,7 +26,7 @@ def init_env():
     if not jars:
         print("error: closure-compiler*.jar not found")
         exit()
-    return [JAVA11, jars[-1]]
+    return [JAVA11, "-jar", jars[-1]]
 
 
 def parse_args():
