@@ -21,7 +21,6 @@ from radon.metrics import mi_rank, mi_visit
 from csvutil import to_csvline
 from miscutil import expand_files
 
-
 Stat = namedtuple("Stat", "file mi cc")
 
 

@@ -5,6 +5,7 @@ from glob import glob
 
 JAVA11 = r"c:\pleiades\java\11\bin\java.exe"
 
+
 def minify(js_files, out_file, verbose):
     args = init_env()
     if verbose:
