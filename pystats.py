@@ -19,16 +19,15 @@ from radon.complexity import cc_rank, cc_visit
 from radon.metrics import mi_rank, mi_visit
 
 from csvutil import to_csvline
+from miscutil import expand_files
+
 
 Stat = namedtuple("Stat", "file mi cc")
-CCStats = namedtuple("CCStats", "type name loc complexity")
 
 
-def to_a(self):
-    return [self.type, self.name, self.loc, self.complexity]
-
-
-setattr(CCStats, "to_a", to_a)
+class CCStats(namedtuple("CCStatsBase", "type name loc complexity")):
+    def to_a(self):
+        return [self.type, self.name, self.loc, self.complexity]
 
 
 def main(paths):
@@ -130,4 +129,5 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("usage: pystats.py file|dir [file|dir...]")
         exit()
-    main(sys.argv[1:])
+    args = expand_files(sys.argv[1:])
+    main(args)
