@@ -30,16 +30,9 @@ class CCStats(namedtuple("CCStatsBase", "type name loc complexity")):
 
 
 def main(paths):
-    stats = anayalize(globbed(paths))
+    stats = anayalize(paths)
     if stats:
         print_result(stats)
-
-
-def globbed(paths):
-    result = []
-    for path in paths:
-        result.extend(glob.glob(path))
-    return result
 
 
 def anayalize(paths):
