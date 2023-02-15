@@ -11,13 +11,16 @@ from miscutil import expand_files
 def main(args):
     files = expand_files(args.file)
     args.show_name = len(files) > 1
-    pattern = re.compile(args.pattern, flags=args.ignorecase)
+    pattern = re.compile(args.pattern, flags=args.ignorecase | args.multi)
 
     for file in files:
         if not os.path.exists(file):
             print(file, "not found")
             continue
-        grep(file, pattern, args)
+        if  args.scan and args.multi != 0:
+            grep_multi(file, pattern, args)
+        else:
+            grep(file, pattern, args)
 
 
 def collect_files(file_args):
@@ -51,6 +54,17 @@ def grep(file, pattern, option):
             print(header + item)
     if option.count:
         print(f"{file}:{count}")
+
+def grep_multi(file, pattern, option):
+    with open(file, encoding=option.encoding) as fp:
+        text = fp.read()
+    result = re.findall(pattern, text)
+    if option.count:
+        print(f"{file}:{len(result)}")
+        return
+    header = f"{file}:" if option.show_name else ""
+    for item in result:
+        print(header + item)
 
 
 ENCODINGS = list(aliases.keys()) + list(aliases.values())
@@ -86,6 +100,14 @@ def parse_arguments():
         const=re.IGNORECASE,
         default=0,
         help="ignore case",
+    )
+    parser.add_argument(
+        "-m",
+        "--multi",
+        action="store_const",
+        const=re.MULTILINE,
+        default=0,
+        help="multiline mode(works only for --scan)",
     )
     parser.add_argument(
         "-s", "--scan", action="store_true", default=False, help="scan mathed patterns"
