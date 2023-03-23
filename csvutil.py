@@ -7,5 +7,5 @@ def to_csvline(lst):
         if isinstance(v, str):
             quoted.append(to_column(v))
         else:
-            quoted.append(v)
-    return ",".join([to_column(v) for v in lst])
+            quoted.append(str(v))
+    return ",".join(quoted)
