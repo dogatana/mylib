@@ -11,6 +11,8 @@ def main(in_html, out_html):
         src = img.attrib["src"]
         if src.startswith("http://") or src.startswith("https://"):
             continue
+        if src.startswith("data:"):
+            continue
         if define_type(src) == "svg":
             insert_svg(img, src)
             continue
