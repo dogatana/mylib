@@ -32,8 +32,6 @@ def get_records(
     if limit < 1 or limit > LIMIT_MAX:
         raise ValueError(f"# invalid limit {limit}")
 
-    print("# query string", query, sep="\n")
-
     res = client.start_query(
         logGroupName=log_group,
         startTime=aws_timestamp(start_dt),
