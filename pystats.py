@@ -8,18 +8,17 @@
 * フォルダ指定時は、フォルダ直下の *.py を対象とする
 """
 
-import glob
-import os.path
 import re
 import sys
+from argparse import ArgumentParser, BooleanOptionalAction
 from collections import namedtuple
+from glob import glob
 
 import radon.visitors
 from radon.complexity import cc_rank, cc_visit
 from radon.metrics import mi_rank, mi_visit
 
 from csvutil import to_csvline
-from miscutil import expand_files
 
 Stat = namedtuple("Stat", "file mi cc")
 
@@ -29,23 +28,10 @@ class CCStats(namedtuple("CCStatsBase", "type name loc complexity")):
         return [self.type, self.name, self.loc, self.complexity]
 
 
-def main(paths):
-    stats = anayalize(paths)
+def main(files):
+    stats = [Stat(file, *get_metrics(file)) for file in files]
     if stats:
         print_result(stats)
-
-
-def anayalize(paths):
-    stats = []
-    for path in paths:
-        if os.path.isfile(path):
-            stats.append(Stat(path, *get_metrics(path)))
-        elif os.path.isdir(path):
-            for file in glob.glob(os.path.join(path, "*.py")):
-                stats.append(Stat(file, *get_metrics(file)))
-        else:
-            print("# invalid target", path)
-    return stats
 
 
 def print_result(stats):
@@ -117,9 +103,27 @@ def read_text(file):
     return "".join(lines)
 
 
+def parse_args():
+    parser = ArgumentParser(description="calculate metrics for python")
+    parser.add_argument(
+        "--recursive",
+        "-r",
+        help="search file recursively",
+        action=BooleanOptionalAction,
+        default=False,
+    )
+    parser.add_argument("target", help="target file(s) or foler(s)", nargs="+")
+    return parser.parse_args()
+
+
+def get_files(args, recursive):
+    target = []
+    for arg in args:
+        target.extend(glob(arg, recursive=recursive))
+    return target
+
+
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        print("usage: pystats.py file|dir [file|dir...]")
-        exit()
-    args = expand_files(sys.argv[1:])
-    main(args)
+    args = parse_args()
+    files = get_files(args.target, args.recursive)
+    main(files)
