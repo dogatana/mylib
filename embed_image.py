@@ -52,7 +52,6 @@ def insert_svg(img, file):
 def read_svg_as_element(file):
     with open(file, "rb") as fp:
         text = fp.read()
-    breakpoint()
     doc = lxml.html.fromstring(text)
     return doc.xpath("//svg")[0]
 
