@@ -1,19 +1,25 @@
-""" jhd - Japanese Hexadecimal Dump """
+"""jhd - Japanese Hexadecimal Dump"""
+
 import argparse
 import io
 import os.path
 import sys
 
 
-def main(file, encoding):
+def main(file, encoding, offset, length):
     setup_stdout_encoding()
 
     data = open(file, "rb").read()
+    if offset >= len(data):
+        print("offset exceeds the end of the file")
+        exit()
+    if length == 0:
+        length = len(data)
 
-    start = 0
+    start = offset
     pre = ""
     skip = 0
-    for ofs in range(start, len(data), 16):  # noqa: E203
+    for ofs in range(start, start + length, 16):  # noqa: E203
         if ofs >= len(data):
             break
 
@@ -49,6 +55,15 @@ def bin_to_ascii(block, row_len, encoding):
     def isctrl(c):
         # 制御文字
         return c < 0x20 or c == 0x7F
+
+    if encoding == "ascii":
+        src = ""
+        for c in block:
+            if c < 0x20 or c >= 0x7F:
+                src += "."
+            else:
+                src += chr(c)
+        return src, 0
 
     src = bytearray((0x2E if isctrl(b) else b for b in block))
     size = row_len
@@ -86,7 +101,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description="jhd - Hexadecimal Dump with decoded Japanese string"
     )
-    parser.set_defaults(encoding="utf-8")
+    parser.set_defaults(encoding="ascii")
     parser.add_argument(
         "-s",
         "--shift_jis",
@@ -103,7 +118,23 @@ def parse_arguments():
         const="utf-8",
         help="assume FILE's encoding is UTF-8 (default)",
     )
+    parser.add_argument(
+        "-a",
+        "--ascii",
+        dest="encoding",
+        action="store_const",
+        const="ascii",
+        help="assume FILE's encoding is ascii",
+    )
+    parser.add_argument(
+        "-o", "--offset", help="offset to start", default=0, type=lambda n: int(n, 0)
+    )
+    parser.add_argument(
+        "-l", "--length", help="length", default=0, type=lambda n: int(n, 0)
+    )
+
     parser.add_argument("file", metavar="FILE", help="file to dump")
+
     args = parser.parse_args()
 
     if not os.path.exists(args.file):
@@ -115,8 +146,9 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
+    print(args)
 
     try:
-        main(args.file, args.encoding)
+        main(args.file, args.encoding, args.offset, args.length)
     except BrokenPipeError:
         pass
