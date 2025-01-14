@@ -1,14 +1,16 @@
 """ main.js を main.min.js の内容で置き換える """
 
 from argparse import ArgumentParser
+import re
 
 
 def main(in_html, in_js, out_html):
     in_text = read_file(in_html)
-    js_text = read_file(in_js)
-    out_text = in_text.replace(
-        '<script src="main.js"></script>', f"<script>{js_text}</script>"
-    )
+    js_text = read_file(in_js).replace("\\", "\\\\")
+    # out_text = in_text.replace(
+    #     '<script src="main.js"></script>', f"<script>{js_text}</script>"
+    # )
+    out_text = re.sub(r'<script src="main[0-9]*.js"></script>', f"<script>{js_text}</script>", in_text)
     write_file(out_html, out_text)
 
 

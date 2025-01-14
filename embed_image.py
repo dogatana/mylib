@@ -11,6 +11,8 @@ def main(in_html, out_html):
         src = img.attrib["src"]
         if src.startswith("http://") or src.startswith("https://"):
             continue
+        if src.startswith("data:"):
+            continue
         if define_type(src) == "svg":
             insert_svg(img, src)
             continue
@@ -50,7 +52,6 @@ def insert_svg(img, file):
 def read_svg_as_element(file):
     with open(file, "rb") as fp:
         text = fp.read()
-    breakpoint()
     doc = lxml.html.fromstring(text)
     return doc.xpath("//svg")[0]
 

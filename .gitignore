@@ -8,6 +8,7 @@
 *.json
 *.txt
 *.jar
+*.mmdb
 
 venv/
 s3/
@@ -18,3 +19,8 @@ patch/
 
 temp/
 
+
+format_log.py
+message.py
+get_iot_log.py
+get_proxy_log.py

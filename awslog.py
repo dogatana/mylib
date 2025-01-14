@@ -3,6 +3,7 @@ AWS CloudWatchLogs の取得ヘルパ
 
 参考： https://docs.aws.amazon.com/ja_jp/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html
 """
+import logging
 import time
 import traceback
 from datetime import datetime, timezone
@@ -32,8 +33,6 @@ def get_records(
     if limit < 1 or limit > LIMIT_MAX:
         raise ValueError(f"# invalid limit {limit}")
 
-    print("# query string", query, sep="\n")
-
     res = client.start_query(
         logGroupName=log_group,
         startTime=aws_timestamp(start_dt),
@@ -42,7 +41,7 @@ def get_records(
         limit=limit,
     )
     query_id = res.get("queryId")
-    print("# query_id", query_id)
+    logging.info(f"query_id: {query_id}")
 
     break_status = set(["Complete", "Failed", "Cancelled", "Timeout", "Unknown"])
     res = {}
@@ -51,19 +50,19 @@ def get_records(
             res = client.get_query_results(queryId=query_id)
             status = res["status"]
             if status in break_status:
-                print("\n# query result", status)
+                print("")
+                logging.info(f"query result: {status}")
                 break
             if status == "Running":
                 print(".", end="", flush=True)
             else:
-                print("# query result", status)
+                logging.info(f"query result: {status}")
             time.sleep(interval)
     except KeyboardInterrupt:
-        print("*** KeyBoardInterrupt ***")
+        logging.warning("*** KeyBoardInterrupt ***")
         return []
     except Exception as e:
-        print("** Exception ***")
-        print("".join(traceback.format_exception(e)))
+        logging.error("*** Exception ***\n" "".join(traceback.format_exception(e)))
         return []
 
     records = []
@@ -77,7 +76,7 @@ def get_records(
         )
 
     if len(records) == limit:
-        print(f"# reach limit {limit}, the result may not include all records")
+        logging.warning(f"reach limit {limit}, the result may not include all records")
     return records
 
 
@@ -91,7 +90,7 @@ def query_loop(query_id, interval):
     while True:
         res = client.get_query_results(queryId=query_id)
         status = res["status"]
-        print("# query result", status)
+        logging.info(f"query result: {status}")
         if status in break_status:
             break
         time.sleep(interval)

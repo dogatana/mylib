@@ -6,7 +6,7 @@ from glob import glob
 def expand_files(args):
     files = []
     for arg in args:
-        files.extend(glob(arg))
+        files.extend(glob(arg, recursive=True))
     return files
 
 
